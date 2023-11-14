@@ -1,5 +1,8 @@
 FROM php:8.2-fpm-bullseye AS base
 
+RUN groupadd --force -g 1000 naganuma
+RUN useradd -ms /bin/bash --no-user-group -g naganuma -u 1000 naganuma
+
 WORKDIR /workspace
 
 # timezone environment
@@ -54,3 +57,5 @@ RUN composer install -q -n --no-ansi --no-dev --no-scripts --no-progress --prefe
   && chmod -R 777 storage bootstrap/cache \
   && php artisan optimize:clear \
   && php artisan optimize
+
+USER naganuma
