@@ -17,6 +17,8 @@ services:
         UID: 1000
         GID: 1001
     user: naganuma
+    ports:
+      - 5173:5173
     volumes:
       - type: bind
         source: ./src

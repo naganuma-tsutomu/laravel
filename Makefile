@@ -56,6 +56,8 @@ web:
 	docker compose exec web bash
 app:
 	docker compose exec app bash
+app-root:
+	docker compose exec --user root app bash
 migrate:
 	docker compose exec app php artisan migrate
 fresh:
