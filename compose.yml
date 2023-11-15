@@ -12,6 +12,11 @@ services:
       context: .
       dockerfile: ./infra/docker/php/Dockerfile
       target: ${APP_BUILD_TARGET:-development}
+      args:
+        USER_NAME: naganuma
+        UID: 1000
+        GID: 1001
+    user: naganuma
     volumes:
       - type: bind
         source: ./src
@@ -71,6 +76,20 @@ services:
       - MYSQL_USER=${DB_USERNAME:-phper}
       - MYSQL_PASSWORD=${DB_PASSWORD:-secret}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-secret}
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_USER=${DB_USERNAME:-phper}
+      - PMA_PASSWORD=${DB_PASSWORD:-secret}
+    # dbのコンテナが起動した後、このコンテナが起動するようにする
+    depends_on:
+      - db
+    # localhost:8080でアクセスできるようにする
+    ports:
+      - 8000:80
 
   mailpit:
     image: axllent/mailpit

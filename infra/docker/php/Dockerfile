@@ -1,9 +1,13 @@
 FROM php:8.2-fpm-bullseye AS base
 
-RUN groupadd --force -g 1000 naganuma
-RUN useradd -ms /bin/bash --no-user-group -g naganuma -u 1000 naganuma
-
 WORKDIR /workspace
+
+ARG USER_NAME
+ARG UID
+ARG GID
+
+RUN groupadd -g ${GID} ${USER_NAME}
+RUN useradd  -m -s /bin/bash -u ${UID} -g ${GID} ${USER_NAME}
 
 # timezone environment
 ENV TZ=UTC \
@@ -58,4 +62,4 @@ RUN composer install -q -n --no-ansi --no-dev --no-scripts --no-progress --prefe
   && php artisan optimize:clear \
   && php artisan optimize
 
-USER naganuma
+USER ${USER_NAME}
